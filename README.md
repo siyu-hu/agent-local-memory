@@ -1,27 +1,28 @@
 # agent-local-memory
 
-> 为 Claude Code 和 OpenClaw 提供跨对话的本地持久记忆
-> Persistent local memory skill for Claude Code & OpenClaw
+**Give your AI a memory that survives across conversations.**
 
-AI Agent 天生不具备跨对话记忆能力。`agent-local-memory` 是一个轻量化 Skill，通过纯文件存储为 Agent 赋予持久记忆——无需外部服务，支持 Claude Code 和 OpenClaw。
+File-based · Zero external services · Claude Code + OpenClaw
+
+[中文介绍 ↓](#中文介绍)
 
 ---
 
-## 与官方记忆功能的区别 / vs. Built-in Memory
+Claude forgets everything when a conversation ends. `agent-local-memory` is a lightweight skill that fixes this — storing structured memories as plain local files, automatically indexed and retrieved across sessions. No database, no cloud sync, no API keys.
 
-| | 官方 Claude Code 记忆 | agent-local-memory |
+## Why not the built-in memory?
+
+| | Built-in Claude Memory | agent-local-memory |
 |---|---|---|
-| 平台支持 | 仅 Claude Code | Claude Code + OpenClaw |
-| 记忆分类 | 无结构 | 4 类结构化（user / feedback / project / reference）|
-| 索引机制 | 无 | MEMORY.md 常驻索引 |
-| Context limit 处理 | 无 | 主动写入保存进度 |
-| 可分发/共享 | 不可 | 可安装、可 fork 定制 |
+| Platform | Claude Code only | Claude Code + OpenClaw |
+| Structure | Unstructured | 4 typed categories |
+| Index | None | Always-loaded `MEMORY.md` |
+| Before context limit | No handling | Proactively saves progress |
+| Portable | No | Install anywhere, fork & customize |
 
----
+## Install
 
-## 快速安装 / Quick Install
-
-### 一键脚本（推荐）
+**One-liner (recommended)**
 
 ```bash
 # Claude Code
@@ -31,7 +32,7 @@ curl -fsSL https://raw.githubusercontent.com/siyu-hu/agent-local-memory/main/scr
 curl -fsSL https://raw.githubusercontent.com/siyu-hu/agent-local-memory/main/scripts/install.sh | bash -s openclaw
 ```
 
-### 手动安装
+**Manual**
 
 ```bash
 # Claude Code
@@ -41,58 +42,87 @@ git clone https://github.com/siyu-hu/agent-local-memory ~/.claude/skills/agent-l
 git clone https://github.com/siyu-hu/agent-local-memory ~/.openclaw/skills/agent-local-memory
 ```
 
-### 更新
+**Update**
 
 ```bash
 git -C ~/.claude/skills/agent-local-memory pull
-# 或
-git -C ~/.openclaw/skills/agent-local-memory pull
 ```
 
----
+## How it works
 
-## 使用方式 / Usage
-
-安装后，直接在对话中说：
+Once installed, just talk to your AI naturally:
 
 ```
-记住，我不喜欢用 mock 测试
-你还记得上次我们讨论的项目架构吗？
-把今天的进度保存到记忆里
+Remember, I never want mock databases in tests.
+What do you remember about our project?
+Save today's progress to memory before we wrap up.
 ```
 
-Skill 会自动：
+The skill handles the rest:
 
-1. **对话开始时** 检查已有记忆，告知相关内容
-2. **按类型存储** user / feedback / project / reference
-3. **维护 MEMORY.md 索引**，控制 context 占用
-4. **接近 context limit 前** 主动保存本次对话进度
+1. **Session start** — checks for existing memories and surfaces relevant ones
+2. **Typed storage** — files are organized into four categories
+3. **MEMORY.md index** — a lean index keeps context overhead minimal
+4. **Before context limit** — proactively writes session progress so nothing is lost
 
----
+## Memory types
 
-## 记忆存储路径 / Memory Storage
+| Type | Stores | Example |
+|------|--------|---------|
+| `user` | Preferences, role, background | "Senior Go engineer, new to React" |
+| `feedback` | Corrected behaviors, rules | "Never mock the database in tests" |
+| `project` | Decisions, deadlines, context | "Auth rewrite is compliance-driven" |
+| `reference` | External resource locations | "Bugs tracked in Linear / INGEST" |
 
-| 平台 | 路径 |
-|------|------|
+See [references/memory-types.md](references/memory-types.md) for full examples.
+
+## Storage paths
+
+| Platform | Memory path |
+|----------|-------------|
 | Claude Code | `~/.claude/memory/` |
 | OpenClaw | `~/.openclaw/memory/` |
-| 自定义 | 修改 `SKILL.md` 中的存储路径说明 |
-
----
-
-## 四类记忆 / Memory Types
-
-| 类型 | 用途 | 典型例子 |
-|------|------|---------|
-| `user` | 用户画像、偏好、背景 | "用户是 Go 工程师，不喜欢冗余解释" |
-| `feedback` | 纠错记录，防止重复 | "集成测试不得 mock 数据库" |
-| `project` | 项目上下文、决策、截止日期 | "认证重写由合规驱动，非技术债" |
-| `reference` | 外部资源位置 | "bug 跟踪在 Linear 项目 INGEST" |
-
-详细说明见 [references/memory-types.md](references/memory-types.md)。
-
----
+| Custom | Edit the path in `SKILL.md` |
 
 ## License
 
 MIT
+
+---
+
+## 中文介绍
+
+**让你的 AI 在对话结束后仍然记得你。**
+
+Claude 每次对话结束后都会失忆。`agent-local-memory` 是一个轻量化 Skill，通过纯本地文件存储为 AI Agent 赋予持久记忆——无需数据库、无需云同步、无需 API Key，支持 Claude Code 和 OpenClaw。
+
+### 与官方记忆功能的区别
+
+| | 官方 Claude Code 记忆 | agent-local-memory |
+|---|---|---|
+| 平台支持 | 仅 Claude Code | Claude Code + OpenClaw |
+| 记忆结构 | 无结构 | 4 类结构化记忆 |
+| 索引 | 无 | MEMORY.md 常驻索引 |
+| Context limit 处理 | 无 | 主动写入保存进度 |
+| 可移植 | 不可 | 可安装、可 fork 定制 |
+
+### 快速安装
+
+```bash
+# Claude Code
+curl -fsSL https://raw.githubusercontent.com/siyu-hu/agent-local-memory/main/scripts/install.sh | bash -s claude
+
+# OpenClaw
+curl -fsSL https://raw.githubusercontent.com/siyu-hu/agent-local-memory/main/scripts/install.sh | bash -s openclaw
+```
+
+### 四类记忆
+
+| 类型 | 用途 | 典型例子 |
+|------|------|---------|
+| `user` | 用户画像、偏好、背景 | "Go 工程师，不喜欢冗余注释" |
+| `feedback` | 纠错记录，防止重复 | "集成测试不得 mock 数据库" |
+| `project` | 项目上下文、决策、截止日期 | "认证重写由合规驱动，非技术债" |
+| `reference` | 外部资源位置 | "Bug 跟踪在 Linear 项目 INGEST" |
+
+详细说明见 [references/memory-types.md](references/memory-types.md)。
