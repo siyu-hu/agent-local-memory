@@ -16,7 +16,7 @@ metadata:
 
 # Agent Local Memory
 
-Persistent local memory across conversations — store user preferences, project context, and behavioral feedback as plain files. No external services required.
+Persistent local memory across conversations — store user preferences, project context, and behavioral feedback as plain files. No external services, no network calls, no credentials required.
 
 ## Storage Paths
 
@@ -26,8 +26,6 @@ Persistent local memory across conversations — store user preferences, project
 | OpenClaw | `~/.openclaw/memory/` |
 | Cross-platform | `~/.agent-memory/` |
 
-Override by specifying a custom path in your `CLAUDE.md` or `OPENCLAW.md`.
-
 ## MEMORY.md Index
 
 Maintain a `MEMORY.md` file in the memory directory as a persistent index:
@@ -36,7 +34,7 @@ Maintain a `MEMORY.md` file in the memory directory as a persistent index:
 - `MEMORY.md` stores only links to memory files + one-line descriptions, never the full content
 - Trim and merge old entries when the index exceeds 200 lines
 
-**At conversation start**: Check whether `MEMORY.md` exists. If it does, read the index and inform the user which memories are available.
+**At conversation start**: Check whether `MEMORY.md` exists in the memory path. If it does, read the index and inform the user which memories are available.
 
 **Before context limit**: Proactively write important content from the current conversation into memory files and update `MEMORY.md`, so the next session can resume seamlessly.
 
@@ -67,11 +65,13 @@ See [references/memory-types.md](references/memory-types.md) for full details.
 
 Before writing, scan `MEMORY.md` — update an existing memory if one applies, do not create duplicates.
 
-**Do not write:**
+**Never write to memory:**
 
-- Code structure, file paths, architecture conventions (derivable from the codebase)
+- Passwords, API keys, tokens, or any credentials
+- Secrets, private keys, or sensitive authentication data
+- Code structure, file paths, or architecture conventions (derivable from the codebase)
 - Temporary state from the current conversation
-- Anything already documented in `CLAUDE.md` or project docs
+- Anything already documented in project files or docs
 - Git history or commit records
 
 ## Conversation Start Prompt
