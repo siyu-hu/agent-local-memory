@@ -26,10 +26,10 @@ Claude forgets everything when a conversation ends. `agent-local-memory` is a li
 
 ```bash
 # Claude Code
-curl -fsSL https://raw.githubusercontent.com/siyu-hu/agent-local-memory/main/scripts/install.sh | bash -s claude
+curl -fsSL https://raw.githubusercontent.com/siyu-hu/agent-local-memory/main/install.sh | bash -s claude
 
 # OpenClaw
-curl -fsSL https://raw.githubusercontent.com/siyu-hu/agent-local-memory/main/scripts/install.sh | bash -s openclaw
+curl -fsSL https://raw.githubusercontent.com/siyu-hu/agent-local-memory/main/install.sh | bash -s openclaw
 ```
 
 **Manual**
@@ -74,8 +74,6 @@ The skill handles the rest:
 | `project` | Decisions, deadlines, context | "Auth rewrite is compliance-driven" |
 | `reference` | External resource locations | "Bugs tracked in Linear / INGEST" |
 
-See [references/memory-types.md](references/memory-types.md) for full examples.
-
 ## Storage paths
 
 | Platform | Memory path |
@@ -110,10 +108,10 @@ Claude 每次对话结束后都会失忆。`agent-local-memory` 是一个轻量�
 
 ```bash
 # Claude Code
-curl -fsSL https://raw.githubusercontent.com/siyu-hu/agent-local-memory/main/scripts/install.sh | bash -s claude
+curl -fsSL https://raw.githubusercontent.com/siyu-hu/agent-local-memory/main/install.sh | bash -s claude
 
 # OpenClaw
-curl -fsSL https://raw.githubusercontent.com/siyu-hu/agent-local-memory/main/scripts/install.sh | bash -s openclaw
+curl -fsSL https://raw.githubusercontent.com/siyu-hu/agent-local-memory/main/install.sh | bash -s openclaw
 ```
 
 ### 四类记忆
@@ -124,5 +122,3 @@ curl -fsSL https://raw.githubusercontent.com/siyu-hu/agent-local-memory/main/scr
 | `feedback` | 纠错记录，防止重复 | "集成测试不得 mock 数据库" |
 | `project` | 项目上下文、决策、截止日期 | "认证重写由合规驱动，非技术债" |
 | `reference` | 外部资源位置 | "Bug 跟踪在 Linear 项目 INGEST" |
-
-详细说明见 [references/memory-types.md](references/memory-types.md)。
